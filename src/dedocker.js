@@ -1,14 +1,32 @@
-import { SpheronClient, ProtocolEnum } from "@spheron/storage";
-const token =
-	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlLZXkiOiIwZTFhYTczNTcyZWNjNDRhN2E0ZDU2ZGI0Mzk4ZTM2ZjkzZDQ2MDEzMzEwYzhhMThmNzcxNmE1YTFmMGRmYjk3OGY2MTZjZjQ5ZTdiZDdkMzUxZDYwYmI5NjU3MWYxZTZlZDEwMjRjM2E4YzgwZWQ2YTMwZGRkNzQ3M2RiZGU3NyIsImlhdCI6MTY4MjM1NDUxOSwiaXNzIjoid3d3LnNwaGVyb24ubmV0d29yayJ9.H6zchMgEW2FmvozXQj7s0H07LIUUZQMe55JqOnr_4nE";
-
-const client = new SpheronClient({ token });
+const fs = require("fs")
+const path = require("path");
+const Formdata = require("form-data");
+const { default: axios } = require("axios");
 
 const commands = function (program) {
 	program
 		.command("push")
 		.description("Push to dedocker registry.")
-		.action(async () => {});
+		.action(async () => {
+			// Gzip the docker image
+
+			// Get path
+			const filePath = path.join(__dirname, './file.txt')
+
+			// Upload to dedocker server
+			const form = new Formdata()
+			const file = fs.readFileSync(filePath);
+			form.append('image', file, 'file.text');
+
+			const response = await axios.post("http://localhost:3000/upload", form, {
+				headers: {
+					...form.getHeaders(),
+				},
+			});
+			console.log(response)
+
+			// TODO: delete the gzip
+		});
 };
 
 module.exports = { commands };
