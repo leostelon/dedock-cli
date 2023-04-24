@@ -1,0 +1,21 @@
+{
+	"name": "dedocker",
+	"version": "1.0.0",
+	"description": "Decentralized docker built on Spheron⚡",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon src/index.js",
+		"start": "node src/index.js",
+		"build": "npm install -g .",
+		"uninstall":"npm uninstall -g dedocker"
+	},
+	"keywords": [],
+	"bin": {
+		"dedocker": "./src/index.js"
+	},
+	"author": "https://github.com/leostelon",
+	"license": "ISC",
+	"dependencies": {
+		"commander": "^9.4.1"
+	}
+}
