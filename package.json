@@ -7,7 +7,7 @@
 		"dev": "nodemon src/index.js",
 		"start": "node src/index.js",
 		"build": "npm install -g .",
-		"uninstall":"npm uninstall -g dedocker"
+		"uninstall": "npm uninstall -g dedocker"
 	},
 	"keywords": [],
 	"bin": {
