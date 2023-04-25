@@ -11,6 +11,8 @@ const commands = function (program) {
 		.description("Push to dedocker registry.")
 		.requiredOption("-i, --image <value>", "Image name with tag.")
 		.action(async (options) => {
+			console.log("Uploading to Dedocker...\n")
+
 			const image = options.image;
 			const tag = image.split(":").pop();
 			const name = image.split(":").slice(0, -1).join(":")
@@ -39,10 +41,36 @@ const commands = function (program) {
 					Authorization: `Bearer ${token}`
 				},
 			});
-			console.log(response)
+			console.log(response.data)
+			console.log("\nSuccessfully uploaded to Dedocker⚡\n")
 
 			// TODO: delete the gzip
 		});
+
+	program.command("pull").description("Pull image from dedocker.").argument('<image>').action(async (image) => {
+		const tag = image.split(":").pop();
+		const name = image.split(":").slice(0, -1).join(":")
+		if (!tag || !name) return console.log("Please specify proper image name with tag.");
+
+		const response = await axios.get("http://localhost:3000/pull/" + image);
+		if (response.status !== 200) {
+			return console.log(response.data)
+		}
+
+		const data = response.data.data;
+        console.log("Fetched image from polybase.");
+        console.log("Downloading image from Decloud...");
+        axios({
+            method: "get",
+            url: `${data.image}/${data.name}.tar`,
+            responseType: "stream"
+        }).then(async function (response) {
+            await response.data.pipe(fs.createWriteStream(`${data.name}.tar`));
+            const { stdout, stderr } = await exec(`docker load < ${data.name}.tar`);
+            if (stderr) return console.log("Docker image load failed!");
+            console.log(`Succefully pulled ${data.name} from Dedocker⚡`);
+        });
+	});
 
 	program.command("login")
 		.description("Login to dedocker, provide token.")
