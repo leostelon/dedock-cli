@@ -9,11 +9,10 @@ const commands = function (program) {
 	program
 		.command("push")
 		.description("Push to dedocker registry.")
-		.requiredOption("-i, --image <value>", "Image name with tag.")
-		.action(async (options) => {
+		.argument('<image>')
+		.action(async (image) => {
 			console.log("Uploading to Dedocker...\n")
 
-			const image = options.image;
 			const tag = image.split(":").pop();
 			const name = image.split(":").slice(0, -1).join(":")
 			if (!tag || !name) return console.log("Please specify proper image name with tag.");
