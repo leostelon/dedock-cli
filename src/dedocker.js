@@ -47,28 +47,36 @@ const commands = function (program) {
 		});
 
 	program.command("pull").description("Pull image from dedocker.").argument('<image>').action(async (image) => {
-		const tag = image.split(":").pop();
-		const name = image.split(":").slice(0, -1).join(":")
-		if (!tag || !name) return console.log("Please specify proper image name with tag.");
+		let tag;
+		let name;
+		if (image.includes(":")) {
+			tag = image.split(":").pop();
+			name = image.split(":").slice(0, -1).join(":")
+		} else {
+			name = image;
+		}
+		if (!name) return console.log("Please specify proper image name with tag.");
+		if (!tag) console.log("No tag was specified, pulling the latest image.");
 
-		const response = await axios.get("http://localhost:3000/pull/" + image);
+		const response = await axios.get("http://localhost:3000/pull?image=" + image);
 		if (response.status !== 200) {
 			return console.log(response.data)
 		}
 
 		const data = response.data.data;
-        console.log("Fetched image from polybase.");
-        console.log("Downloading image from Decloud...");
-        axios({
-            method: "get",
-            url: `${data.image}/${data.name}.tar`,
-            responseType: "stream"
-        }).then(async function (response) {
-            await response.data.pipe(fs.createWriteStream(`${data.name}.tar`));
-            const { stdout, stderr } = await exec(`docker load < ${data.name}.tar`);
-            if (stderr) return console.log("Docker image load failed!");
-            console.log(`Succefully pulled ${data.name} from Dedocker⚡`);
-        });
+		console.log("Fetched image from polybase.");
+		console.log("Downloading image from Decloud...\n");
+		const fileName = data.name.split("/")[1];
+		axios({
+			method: "get",
+			url: `${data.image}/${fileName}.tar`,
+			responseType: "stream"
+		}).then(async function (response) {
+			await response.data.pipe(fs.createWriteStream(`${fileName}.tar`));
+			const { stdout, stderr } = await exec(`docker load < ${fileName}.tar`);
+			if (stderr) return console.log("Docker image load failed!");
+			console.log(`Succefully pulled ${fileName} from Dedocker⚡`);
+		});
 	});
 
 	program.command("login")
