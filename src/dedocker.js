@@ -58,7 +58,18 @@ const commands = function (program) {
 		if (!name) return console.log("Please specify proper image name with tag.");
 		if (!tag) console.log("No tag was specified, pulling the latest image.");
 
-		const response = await axios.get("http://localhost:3000/pull?image=" + image);
+		// Get token
+		let token;
+		try {
+			token = fs.readFileSync("./config", { encoding: 'utf8', flag: 'r' });
+		} catch (err) { }
+
+		const response = await axios.get("http://localhost:3000/pull?image=" + image, {
+			headers: {
+				"Content-Type": `application/json`,
+				Authorization: "Bearer " + token
+			}
+		});
 		if (response.status !== 200) {
 			return console.log(response.data)
 		}
