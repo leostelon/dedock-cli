@@ -1,5 +1,5 @@
 {
-  "name": "@leostelon/dedocker",
+  "name": "dedocker",
   "version": "1.0.0",
   "description": "Decentralized docker built on Spheron⚡",
   "main": "index.js",
@@ -19,7 +19,6 @@
     "commander": "^9.4.1",
     "form-data": "^4.0.0"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leostelon/dedock-cli.git"
