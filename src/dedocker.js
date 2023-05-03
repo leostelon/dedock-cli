@@ -34,7 +34,7 @@ const commands = function (program) {
 			form.append('file', file, `${name}.tar`);
 			form.append("image", image);
 
-			const response = await axios.post("http://localhost:3000/upload", form, {
+			const response = await axios.post("https://api.dedocker.xyz/upload", form, {
 				headers: {
 					...form.getHeaders(),
 					Authorization: `Bearer ${token}`
@@ -64,7 +64,7 @@ const commands = function (program) {
 			token = fs.readFileSync(path.join(__dirname, './config'), { encoding: 'utf8', flag: 'r' });
 		} catch (err) { }
 
-		const response = await axios.get("http://localhost:3000/pull?image=" + image, {
+		const response = await axios.get("https://api.dedocker.xyz/pull?image=" + image, {
 			headers: {
 				"Content-Type": `application/json`,
 				Authorization: "Bearer " + token
