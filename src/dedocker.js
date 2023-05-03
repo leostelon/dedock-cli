@@ -18,14 +18,14 @@ const commands = function (program) {
 			if (!tag || !name) return console.log("Please specify proper image name with tag.");
 
 			// Save docker image
-			const { stdout, stderr } = await exec(`docker save -o ${name}.tar ${name}`);
+			const { stdout, stderr } = await exec(`docker save -o ${path.join(__dirname, "./" + name)}.tar ${name}:${tag}`);
 			if (stderr) return console.log("Docker image save failed!");
 
 			// Get path
-			const filePath = path.join(__dirname, `../${name}.tar`)
+			const filePath = path.join(__dirname, `./${name}.tar`)
 
 			// Get token
-			const token = fs.readFileSync("./config", { encoding: 'utf8', flag: 'r' });
+			const token = fs.readFileSync(path.join(__dirname, './config'), { encoding: 'utf8', flag: 'r' });
 			if (!token || token === "") return console.log("Please login into CLI.");
 
 			// Upload to dedocker server
@@ -61,7 +61,7 @@ const commands = function (program) {
 		// Get token
 		let token;
 		try {
-			token = fs.readFileSync("./config", { encoding: 'utf8', flag: 'r' });
+			token = fs.readFileSync(path.join(__dirname, './config'), { encoding: 'utf8', flag: 'r' });
 		} catch (err) { }
 
 		const response = await axios.get("http://localhost:3000/pull?image=" + image, {
@@ -95,7 +95,7 @@ const commands = function (program) {
 		.requiredOption("-t, --token <value>", "Token from web app.")
 		.action(async (options) => {
 			const token = options.token;
-			fs.writeFileSync('./config', token, { flag: 'w' });
+			fs.writeFileSync(path.join(__dirname, './config'), token, { flag: 'w' });
 		})
 };
 
