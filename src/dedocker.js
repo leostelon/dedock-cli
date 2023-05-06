@@ -64,7 +64,7 @@ const commands = function (program) {
 			token = fs.readFileSync(path.join(__dirname, './config'), { encoding: 'utf8', flag: 'r' });
 		} catch (err) { }
 
-		const response = await axios.get("https://api.dedocker.xyz/pull?image=" + image, {
+		const response = await axios.get("http://2p89cqdu7da8t16thmirl50oak.ingress.kloudmos.com/pull?image=" + image, {
 			headers: {
 				"Content-Type": `application/json`,
 				Authorization: "Bearer " + token
