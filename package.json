@@ -1,6 +1,6 @@
 {
   "name": "dedocker",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Decentralized docker built on Spheron⚡",
   "main": "index.js",
   "scripts": {
