@@ -25,7 +25,12 @@ const commands = function (program) {
 			const filePath = path.join(__dirname, `./${name}.tar`)
 
 			// Get token
-			const token = fs.readFileSync(path.join(__dirname, './config'), { encoding: 'utf8', flag: 'r' });
+			let token;
+			try {
+				token = fs.readFileSync(path.join(__dirname, './config'), { encoding: 'utf8', flag: 'r' });
+			} catch (err) {
+				return console.log("Please login into CLI.");
+			}
 			if (!token || token === "") return console.log("Please login into CLI.");
 
 			// Upload to dedocker server
@@ -34,7 +39,7 @@ const commands = function (program) {
 			form.append('file', file, `${name}.tar`);
 			form.append("image", image);
 
-			const response = await axios.post("http://91mgmk08k5b2t7erab6klh3atc.ingress.america.computer/upload", form, {
+			const response = await axios.post("http://rnohrlo30996n6od6d3rknla0o.ingress.palmito.duckdns.org/upload", form, {
 				headers: {
 					...form.getHeaders(),
 					Authorization: `Bearer ${token}`
@@ -64,7 +69,7 @@ const commands = function (program) {
 			token = fs.readFileSync(path.join(__dirname, './config'), { encoding: 'utf8', flag: 'r' });
 		} catch (err) { }
 
-		const response = await axios.get("http://91mgmk08k5b2t7erab6klh3atc.ingress.america.computer/pull?image=" + image, {
+		const response = await axios.get("http://rnohrlo30996n6od6d3rknla0o.ingress.palmito.duckdns.org/pull?image=" + image, {
 			headers: {
 				"Content-Type": `application/json`,
 				Authorization: "Bearer " + token
